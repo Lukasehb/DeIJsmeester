@@ -1,0 +1,959 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>De IJsmeester – Handgemaakt Ijs op Wielen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FFF8EE;
+      --vanilla: #F5E6C8;
+      --caramel: #C8813A;
+      --dark-brown: #2B1A0E;
+      --mint: #4DBFA8;
+      --strawberry: #E8556A;
+      --pistachio: #7AB648;
+      --lavender: #9B7FD4;
+      --text: #2B1A0E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(255,248,238,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,129,58,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--dark-brown);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--caramel); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--dark-brown);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    nav ul li a:hover { opacity: 1; color: var(--caramel); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 5rem 4rem;
+      gap: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .hero-bg-circle.c1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,129,58,0.2), transparent 70%);
+      top: -100px; right: -100px;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .hero-bg-circle.c2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(232,85,106,0.12), transparent 70%);
+      bottom: 0; left: 0;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    .hero-text { position: relative; z-index: 2; }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--caramel);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--dark-brown);
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    h1 em {
+      color: var(--caramel);
+      font-style: italic;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: #5a3e28;
+      margin-top: 1.5rem;
+      max-width: 440px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn-primary {
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--caramel);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 2px solid var(--dark-brown);
+      color: var(--dark-brown);
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--dark-brown);
+      color: var(--cream);
+      transform: translateY(-2px);
+    }
+
+    /* ── ICE CREAM VISUAL ── */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeUp 0.9s ease 0.2s both;
+    }
+
+    .ice-cream-card {
+      position: relative;
+      width: 320px;
+      height: 420px;
+    }
+
+    .scoop-stack {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .scoop {
+      width: 130px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: -25px;
+      box-shadow: inset -8px -8px 20px rgba(0,0,0,0.15), 0 4px 20px rgba(0,0,0,0.12);
+      animation: wobble 6s ease-in-out infinite;
+    }
+
+    .scoop:nth-child(1) { background: #E8B4C0; animation-delay: 0s; z-index: 3; } /* strawberry */
+    .scoop:nth-child(2) { background: #D4EDB0; animation-delay: 0.5s; z-index: 2; } /* pistachio */
+    .scoop:nth-child(3) { background: #F7E0A0; animation-delay: 1s; z-index: 1; } /* vanilla */
+
+    @keyframes wobble {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(1.5deg) scale(1.02); }
+      75% { transform: rotate(-1.5deg) scale(0.98); }
+    }
+
+    .cone {
+      width: 0;
+      height: 0;
+      border-left: 55px solid transparent;
+      border-right: 55px solid transparent;
+      border-top: 140px solid #D4956A;
+      position: relative;
+      z-index: 0;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+    }
+
+    .cone::after {
+      content: '';
+      position: absolute;
+      top: -140px; left: -52px;
+      width: 104px;
+      height: 140px;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 8px,
+        rgba(0,0,0,0.06) 8px,
+        rgba(0,0,0,0.06) 10px
+      );
+    }
+
+    .drip {
+      position: absolute;
+      width: 14px;
+      height: 30px;
+      border-radius: 0 0 50% 50%;
+      animation: drip 3s ease-in-out infinite;
+    }
+
+    .drip1 { background: #E8B4C0; top: 95px; left: 100px; animation-delay: 0s; }
+    .drip2 { background: #D4EDB0; top: 130px; left: 185px; animation-delay: 1s; }
+
+    @keyframes drip {
+      0%, 100% { height: 20px; opacity: 0.8; }
+      50% { height: 35px; opacity: 1; }
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 6rem 5rem; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--dark-brown);
+    }
+
+    /* ── SMAKEN ── */
+    #smaken {
+      background: var(--dark-brown);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #smaken::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,129,58,0.15), transparent 70%);
+    }
+
+    #smaken .section-label { color: var(--caramel); }
+    #smaken .section-title { color: var(--cream); }
+    #smaken .section-intro { color: rgba(255,248,238,0.65); }
+
+    .section-intro {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 520px;
+      margin-top: 1rem;
+      margin-bottom: 3rem;
+      color: #5a3e28;
+    }
+
+    .flavors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .flavor-card {
+      background: rgba(255,248,238,0.06);
+      border: 1px solid rgba(255,248,238,0.1);
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      transition: transform 0.3s, background 0.3s;
+      cursor: default;
+    }
+
+    .flavor-card:hover {
+      transform: translateY(-6px);
+      background: rgba(255,248,238,0.1);
+    }
+
+    .flavor-dot {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .flavor-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+    }
+
+    .flavor-desc {
+      font-size: 0.8rem;
+      color: rgba(255,248,238,0.5);
+      line-height: 1.5;
+    }
+
+    /* ── VOTE ── */
+    #stemmen {
+      background: var(--vanilla);
+      position: relative;
+    }
+
+    .vote-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+
+    .vote-card {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      box-shadow: 0 2px 20px rgba(43,26,14,0.07);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .vote-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(43,26,14,0.12); }
+
+    .vote-emoji {
+      font-size: 2.2rem;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      flex-shrink: 0;
+    }
+
+    .vote-info { flex: 1; }
+
+    .vote-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark-brown);
+    }
+
+    .vote-bar-wrap {
+      margin-top: 0.5rem;
+      background: var(--vanilla);
+      border-radius: 100px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .vote-bar {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s cubic-bezier(.25,.8,.25,1);
+    }
+
+    .vote-count {
+      font-size: 0.8rem;
+      color: #9a7050;
+      margin-top: 0.3rem;
+    }
+
+    .vote-btn {
+      background: none;
+      border: 2px solid var(--vanilla);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .vote-btn:hover {
+      border-color: var(--caramel);
+      background: var(--caramel);
+      transform: scale(1.15);
+    }
+
+    .vote-btn.voted {
+      background: var(--caramel);
+      border-color: var(--caramel);
+    }
+
+    .vote-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .vote-thanks {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #9a7050;
+      display: none;
+    }
+
+    /* ── OVER ONS ── */
+    #over {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .over-visual {
+      position: relative;
+    }
+
+    .bus-illustration {
+      background: linear-gradient(135deg, var(--caramel), #A0622A);
+      border-radius: 30px;
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bus-illustration::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,0.04) 20px,
+        rgba(255,255,255,0.04) 22px
+      );
+    }
+
+    .bus-emoji { font-size: 6rem; display: block; animation: bounce 2.5s ease-in-out infinite; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .bus-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .over-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .feature {
+      background: var(--vanilla);
+      border-radius: 16px;
+      padding: 1.4rem;
+    }
+
+    .feature-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--dark-brown);
+      margin-bottom: 0.3rem;
+    }
+
+    .feature-text { font-size: 0.82rem; color: #7a5a40; line-height: 1.5; }
+
+    /* ── LOCATIE ── */
+    #locatie {
+      background: var(--dark-brown);
+      text-align: center;
+    }
+
+    #locatie .section-label { color: var(--caramel); }
+    #locatie .section-title { color: var(--cream); }
+    #locatie .section-intro { color: rgba(255,248,238,0.6); margin: 1rem auto 3rem; text-align: center; }
+
+    .location-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .loc-card {
+      background: rgba(255,248,238,0.06);
+      border: 1px solid rgba(255,248,238,0.1);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: left;
+    }
+
+    .loc-day {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      margin-bottom: 0.5rem;
+    }
+
+    .loc-place {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+    }
+
+    .loc-time { font-size: 0.85rem; color: rgba(255,248,238,0.5); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--cream);
+      text-align: center;
+    }
+
+    .contact-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .contact-inner .section-intro { margin: 1rem auto 2.5rem; text-align: center; }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--dark-brown);
+      color: var(--cream);
+      padding: 0.8rem 1.5rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .contact-pill:hover { background: var(--caramel); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark-brown);
+      color: rgba(255,248,238,0.4);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,248,238,0.06);
+    }
+
+    footer span { color: var(--caramel); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; text-align: center; }
+      .hero-sub { margin: 1.5rem auto 0; }
+      .hero-buttons { justify-content: center; }
+      .hero-visual { display: none; }
+      section { padding: 4rem 1.5rem; }
+      #over { grid-template-columns: 1fr; gap: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">De <span>IJs</span>meester</div>
+  <ul>
+    <li><a href="#smaken">Smaken</a></li>
+    <li><a href="#stemmen">Stem mee</a></li>
+    <li><a href="#over">Over ons</a></li>
+    <li><a href="#locatie">Locaties</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+
+  <div class="hero-text">
+    <div class="hero-tag">🍦 Handgemaakt & Ambachtelijk</div>
+    <h1>De <em>beste</em> ijsjes rij jij tegemoet</h1>
+    <p class="hero-sub">
+      Bij De IJsmeester rijden we elke dag de stad door met onze ijsbus, vol ambachtelijk ijs dat we zelf maken — van verse lokale ingrediënten, in smaken die je nergens anders vindt.
+    </p>
+    <div class="hero-buttons">
+      <a href="#smaken" class="btn-primary">Bekijk smaken</a>
+      <a href="#stemmen" class="btn-secondary">Stem op nieuwe smaak</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="ice-cream-card">
+      <div class="scoop-stack">
+        <div class="scoop"></div>
+        <div class="scoop"></div>
+        <div class="scoop"></div>
+        <div class="cone"></div>
+      </div>
+      <div class="drip drip1"></div>
+      <div class="drip drip2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SMAKEN -->
+<section id="smaken">
+  <div class="section-label reveal">Ons aanbod</div>
+  <div class="section-title reveal">Huidige smaken</div>
+  <p class="section-intro reveal">Alles zelf gemaakt, met liefde en verse ingrediënten. We wisselen seizoensgebonden — kom terug voor de nieuwste creaties.</p>
+
+  <div class="flavors-grid">
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #E8B4C0, #D4788A);"></div>
+      <div class="flavor-name">Aardbeien & Basilicum</div>
+      <div class="flavor-desc">Fris en onverwacht. Verse Belgische aardbeien met een kruidig tintje.</div>
+    </div>
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #D4EDB0, #8DC63F);"></div>
+      <div class="flavor-name">Siciliaanse Pistache</div>
+      <div class="flavor-desc">Romig en nootachtig met echte pistachenoten uit Bronte.</div>
+    </div>
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #F7E0A0, #E8C04A);"></div>
+      <div class="flavor-name">Madagaskar Vanille</div>
+      <div class="flavor-desc">Onze klassieker — puur vanillestokje, niets meer nodig.</div>
+    </div>
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #C8A070, #8B5E3C);"></div>
+      <div class="flavor-name">Gezouten Karamel</div>
+      <div class="flavor-desc">Diep karamel met een vlokje Fleur de Sel. Gevaarlijk lekker.</div>
+    </div>
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #A8D8E8, #4BA8C8);"></div>
+      <div class="flavor-name">Kokosnoot & Limoen</div>
+      <div class="flavor-desc">Tropisch verfrissend, zomers en licht. Perfecte zomerkombo.</div>
+    </div>
+    <div class="flavor-card reveal">
+      <div class="flavor-dot" style="background: linear-gradient(135deg, #3C3C3C, #1A1A1A);"></div>
+      <div class="flavor-name">Pure Chocolade</div>
+      <div class="flavor-desc">72% cacao, intens maar fluweelzacht. Voor de echte chocoholic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- VOTE -->
+<section id="stemmen">
+  <div class="section-label reveal">Jij beslist mee</div>
+  <div class="section-title reveal">Stem op een nieuwe smaak</div>
+  <p class="section-intro reveal">
+    Welke smaak moet er volgende maand in de bus? Geef je stem en wie weet rijden we binnenkort met jouw favoriete creatie!
+  </p>
+
+  <div class="vote-grid" id="voteGrid"></div>
+  <p class="vote-thanks" id="voteThanks">🎉 Bedankt voor je stem! We verwerken alle stemmen aan het eind van de maand.</p>
+</section>
+
+<!-- OVER -->
+<section id="over">
+  <div class="over-visual reveal">
+    <div class="bus-illustration">
+      <span class="bus-emoji">🚐</span>
+      <div class="bus-tagline">De IJsbus rijdt naar jou toe</div>
+    </div>
+    <div class="over-features">
+      <div class="feature reveal">
+        <div class="feature-icon">🥛</div>
+        <div class="feature-title">Verse ingrediënten</div>
+        <div class="feature-text">Lokale melk & room, vers fruit van de markt.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">🤲</div>
+        <div class="feature-title">Zelf gemaakt</div>
+        <div class="feature-text">Elke batch door onze eigen IJsmeester bereid.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">♻️</div>
+        <div class="feature-title">Duurzaam</div>
+        <div class="feature-text">Biologisch afbreekbare bakjes en hoorntjes.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">📍</div>
+        <div class="feature-title">Altijd nabij</div>
+        <div class="feature-text">Volg ons op Instagram voor dagelijkse locaties.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="section-label">Ons verhaal</div>
+    <h2 class="section-title">Passie voor ijs, op wielen</h2>
+    <p class="section-intro" style="margin-top:1rem;">
+      De IJsmeester begon met één droom: het lekkerste ambachtelijke ijs van de buurt maken en het rechtstreeks naar de mensen brengen. Geen winkel, geen tussenweg — gewoon verse smaken, een vrolijke bus en echte verbinding met de buurt.
+    </p>
+    <p class="section-intro">
+      We experimenteren constant met nieuwe combinaties en luisteren naar onze klanten. Daarom mogen jullie mee beslissen welke smaken er in de bus komen!
+    </p>
+    <a href="#stemmen" class="btn-primary" style="display: inline-block; margin-top:0.5rem;">Stem nu mee</a>
+  </div>
+</section>
+
+<!-- LOCATIE -->
+<section id="locatie">
+  <div class="section-label reveal">Waar zijn we?</div>
+  <div class="section-title reveal">Vind de IJsbus</div>
+  <p class="section-intro reveal">We rijden elke week langs vaste plekken. Volg ook ons Instagram voor dagelijkse updates en verrassingslocaties!</p>
+
+  <div class="location-cards">
+    <div class="loc-card reveal">
+      <div class="loc-day">Dinsdag</div>
+      <div class="loc-place">📍 Stadspark</div>
+      <div class="loc-time">14:00 – 19:00</div>
+    </div>
+    <div class="loc-card reveal">
+      <div class="loc-day">Donderdag</div>
+      <div class="loc-place">📍 Weekmarkt Grote Markt</div>
+      <div class="loc-time">10:00 – 17:00</div>
+    </div>
+    <div class="loc-card reveal">
+      <div class="loc-day">Vrijdag</div>
+      <div class="loc-place">📍 Schoolomgeving Centrum</div>
+      <div class="loc-time">15:30 – 18:30</div>
+    </div>
+    <div class="loc-card reveal">
+      <div class="loc-day">Zaterdag</div>
+      <div class="loc-place">📍 Recreatiedomein Noord</div>
+      <div class="loc-time">11:00 – 19:00</div>
+    </div>
+    <div class="loc-card reveal">
+      <div class="loc-day">Zondag</div>
+      <div class="loc-place">📍 Zondagsmarkt</div>
+      <div class="loc-time">10:00 – 16:00</div>
+    </div>
+    <div class="loc-card reveal">
+      <div class="loc-day">Op aanvraag</div>
+      <div class="loc-place">🎉 Feesten & Events</div>
+      <div class="loc-time">Neem contact op</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal">Neem contact op</div>
+    <h2 class="section-title reveal">Laten we kennismaken</h2>
+    <p class="section-intro reveal">
+      Interesse om de IJsbus te boeken voor jouw feestje, bedrijfsevenement of buurtactiviteit? Of heb je gewoon een vraag? We horen graag van je!
+    </p>
+    <div class="contact-links reveal">
+      <a href="mailto:hallo@deijsmeester.be" class="contact-pill">✉️ hallo@deijsmeester.be</a>
+      <a href="tel:+32470000000" class="contact-pill">📞 +32 470 00 00 00</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>De IJsmeester</span> — Handgemaakt ijs op wielen. Met 🍦 gemaakt.</p>
+</footer>
+
+<script>
+  // ── VOTE DATA ──
+  const flavors = [
+    { id: 'mango', emoji: '🥭', name: 'Mango & Chili', bg: '#FFD580', votes: 47 },
+    { id: 'lavender', emoji: '💜', name: 'Lavendel & Honing', bg: '#C3A8E0', votes: 38 },
+    { id: 'matcha', emoji: '🍵', name: 'Japanse Matcha', bg: '#90C97A', votes: 62 },
+    { id: 'speculaas', emoji: '🍪', name: 'Speculaas & Peer', bg: '#D4956A', votes: 55 },
+    { id: 'blueberry', emoji: '🫐', name: 'Bosbes & Karnemelk', bg: '#7B8FD4', votes: 29 },
+    { id: 'passionfruit', emoji: '🌺', name: 'Passievrucht & Kokos', bg: '#F4A261', votes: 44 },
+  ];
+
+  const maxVotes = Math.max(...flavors.map(f => f.votes));
+  const voted = JSON.parse(localStorage.getItem('ijsmeester_voted') || '{}');
+
+  function renderVotes() {
+    const grid = document.getElementById('voteGrid');
+    grid.innerHTML = '';
+    const sorted = [...flavors].sort((a, b) => b.votes - a.votes);
+
+    sorted.forEach(f => {
+      const pct = Math.round((f.votes / (maxVotes + 20)) * 100);
+      const hasVoted = voted[f.id];
+      const card = document.createElement('div');
+      card.className = 'vote-card';
+      card.innerHTML = `
+        <div class="vote-emoji" style="background:${f.bg}20;">${f.emoji}</div>
+        <div class="vote-info">
+          <div class="vote-name">${f.name}</div>
+          <div class="vote-bar-wrap">
+            <div class="vote-bar" id="bar-${f.id}" style="width:0; background:${f.bg};"></div>
+          </div>
+          <div class="vote-count" id="count-${f.id}">${f.votes} stemmen</div>
+        </div>
+        <button class="vote-btn ${hasVoted ? 'voted' : ''}" 
+                onclick="castVote('${f.id}')" 
+                ${hasVoted ? 'disabled' : ''}
+                title="Stem op ${f.name}">
+          ${hasVoted ? '✓' : '👍'}
+        </button>
+      `;
+      grid.appendChild(card);
+      // Animate bar
+      setTimeout(() => {
+        document.getElementById('bar-' + f.id).style.width = pct + '%';
+      }, 100);
+    });
+  }
+
+  function castVote(id) {
+    if (voted[id]) return;
+    const f = flavors.find(x => x.id === id);
+    f.votes++;
+    voted[id] = true;
+    localStorage.setItem('ijsmeester_voted', JSON.stringify(voted));
+    renderVotes();
+    const thanks = document.getElementById('voteThanks');
+    thanks.style.display = 'block';
+    setTimeout(() => thanks.style.display = 'none', 5000);
+  }
+
+  renderVotes();
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
